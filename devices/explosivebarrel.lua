@@ -9,7 +9,7 @@ SelectionWidth = 40.0
 SelectionHeight = 40.0
 SelectionOffset = { 0.0, -40.5 }
 Mass = 40.0
-HitPoints = 500.0
+HitPoints = 250.0
 MinWindEfficiency = 1
 MaxWindHeight = 0
 MaxRotationalSpeed = 0
@@ -22,6 +22,7 @@ IncendiaryRadiusHeated = 150
 StructureSplashDamage = 150
 StructureSplashDamageMaxRadius = 100
 IgnitePlatformOnDestruct = true
+BuildTimeComplete = 30
 Repairable = true
 DestroyEffect = "effects/cannon_explode.lua"
 

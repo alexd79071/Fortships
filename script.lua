@@ -1,6 +1,10 @@
 dofile("scripts/forts.lua")
 
 data.Controllers = {}
+data.NodeA = {}
+data.NodeB = {}
+Frame = 0
+SelectedFrame = 0
 
 -----------------------------------------------------------------------------------------------------------
 
@@ -34,7 +38,7 @@ function showModInfo()
 	--For instructions or other important things
 	local ModOther = "The Controller device and the Suspendium Chamber device are important"
 	local ModOther2 = "read the descriptions of these devices. Warning: !This mod is a Work in Progress!"
-	local ModCredit = "Thanks to SamsterBirdies, [Dev] BeeMan, Lancenshield,"
+	local ModCredit = "Thanks to SamsterBirdies, [Dev] BeeMan, Lancenshield, Wak, Land Planters"
 	local ModCredit2 = "Pyro, Bobereto, and others who helped me make and test this mod."
 	AddTextControl("HUD", "ModName", ModName, ANCHOR_TOP_CENTER, Vec3(500, 250, 0), false, "Heading")
 	AddTextControl("HUD", "ModAuthor", ModAuthor, ANCHOR_TOP_CENTER, Vec3(500, 325, 0), false, "Body")
@@ -154,20 +158,53 @@ function Main(team)
 	ScheduleCall(0.05, Main, team)
 end
 ---------------------------------------------------------------------------------------------------------
+function AddPlayerNodeAToTable(nodeA, nodeB, team)
+	--Log("Recieved Team " .. tostring(team))
+	data.NodeA[team] = nodeA
+	data.NodeB[team] = nodeB
+	--Log(tostring(nodeA))
+	--Log(tostring(nodeB))
+end
+
+
+---------------------------------------------------------------------------------------------------------
 function FindAndDealWithConnectedChambers(StructureID, DesiredHeight, team)
+	--Log("Sent Team " .. tostring(GetLocalTeamId()))
+	hDevice = GetLocalSelectedDeviceId()--GetDeviceIdAtPosition(ProcessedMousePos())
+	if (hDevice ~= -1 or SelectedFrame + 15 < Frame) then
+		SendScriptEvent("AddPlayerNodeAToTable", tostring(GetDevicePlatformA(hDevice)) .. "," .. tostring(GetDevicePlatformB(hDevice)) .. "," .. tostring(GetLocalTeamId()), "", true)
+		SelectedFrame = Frame
+	end
+	
+	if (data.NodeA[GetLocalTeamId()] == nil) then
+		data.NodeA[GetLocalTeamId()] = -1 --no node selected
+	end
+	if (data.NodeB[GetLocalTeamId()] == nil) then
+		data.NodeB[GetLocalTeamId()] = -1 --no node selected
+	end
+	
 	local deviceCount = GetDeviceCount(team)
 	for i=0,deviceCount - 1 do
-		local deviceID = GetDeviceId(team, i)	
+		local deviceID = GetDeviceId(team, i)
 		local NewStructureID = NodeStructureId(GetDevicePlatformA(deviceID))
 		if (StructureID == NewStructureID) then
 			local DeviceSavename = GetDeviceType(deviceID)
-			if (StartsWith(DeviceSavename, "dynamicbarrel")) then
-				if (GetDeviceTeamIdActual(deviceID) == team) then
-					barrelMovement(deviceID, DesiredHeight)
+			if (StartsWith(DeviceSavename, "dynamicbarrel")) then --and GetDeviceTeamIdActual(deviceID) == GetLocalTeamId()
+				devTeamID = GetDeviceTeamIdActual(deviceID)
+				nA = data.NodeA[devTeamID]
+				nB = data.NodeB[devTeamID]
+				idChecker = GetDeviceIdOnPlatform(nA, nB)
+				if not (deviceID == idChecker) then
+					--SendScriptEvent("barrelMovement",tostring(deviceID)..","..tostring(DesiredHeight), "", true)
+					barrelMovement(deviceID,DesiredHeight)
 				end
 			end
 		end
 	end
+end
+
+function Update(frame)
+	Frame = frame
 end
 ---------------------------------------------------------------------------------------------------------
 -- This function calculates the needed movements of the barrel.

@@ -11,7 +11,7 @@ table.insert(Sprites, ButtonSprite("hud-Newbarrel-icon", "HUD/HUD-barrel", nil, 
 local barrel = FindDevice("barrel")
 if barrel then
 	barrel.Enabled = true
-	barrel.MetalCost = 600
+	barrel.MetalCost = 300
 	barrel.EnergyCost = 2000
 	barrel.NoReclaim = false
 	barrel.Icon = "hud-Newbarrel-icon"
@@ -44,11 +44,12 @@ table.insert(Devices, IndexOfDevice("sandbags") + 1,
 	EnergyCost = 600,
 	MetalRepairCost = 30,
 	EnergyRepairCost = 400,
+	BuildTimeComplete = 1,
 	MetalReclaimMin = 0,
 	MetalReclaimMax = 0,
 	EnergyReclaimMin = 0,
 	EnergyReclaimMax = 0,
-	MaxUpAngle = StandardMaxUpAngle,
+	MaxUpAngle = 40,
 	BuildOnGroundOnly = false,
 	SelectEffect = "ui/hud/devices/ui_devices",
 	Upgrades = UpgradeArray,
@@ -121,8 +122,8 @@ table.insert(Devices, IndexOfDevice("sandbags") + 1,
 	BuildTimeIntermediate = 0,
 	BuildTimeComplete = 0,
 	ScrapPeriod = 1,
-	MetalCost = 700,
-	EnergyCost = 6000,
+	MetalCost = 300,
+	EnergyCost = 2000,
 	MetalRepairCost = 30,
 	EnergyRepairCost = 400,
 	MetalReclaimMin = 0,
