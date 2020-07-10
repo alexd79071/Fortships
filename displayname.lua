@@ -1,4 +1,4 @@
 DisplayName =
 {
-	['English'] = L"Fortships: Waky Build",
+	['English'] = L"Fortships: Conquer the Skies",
 }
