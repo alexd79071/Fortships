@@ -22,7 +22,6 @@ IncendiaryRadiusHeated = 150
 StructureSplashDamage = 150
 StructureSplashDamageMaxRadius = 100
 IgnitePlatformOnDestruct = true
-BuildTimeComplete = 30
 Repairable = true
 DestroyEffect = "effects/cannon_explode.lua"
 
