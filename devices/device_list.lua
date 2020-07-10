@@ -13,6 +13,7 @@ if barrel then
 	barrel.Enabled = true
 	barrel.MetalCost = 300
 	barrel.EnergyCost = 2000
+	barrel.BuildTimeComplete = 30
 	barrel.NoReclaim = false
 	barrel.Icon = "hud-Newbarrel-icon"
 end
