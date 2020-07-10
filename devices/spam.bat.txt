@@ -1,0 +1,6 @@
+echo hi
+FOR /L %%A IN (0,1,99) DO (
+	echo %%A
+	copy dynamic_barrel_spam.lua barrel_spam\barrel_%%A.lua
+	echo Mass=-^(%%A * 40^) >> barrel_spam\barrel_%%A.lua
+)
