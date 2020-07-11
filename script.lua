@@ -1,8 +1,8 @@
 dofile("scripts/forts.lua")
 
 data.Controllers = {}
-data.NodeA = {}
-data.NodeB = {}
+data.NodeA = {} -- used to store the selected nodes of each player's device's platform
+data.NodeB = {} -- ditto
 Frame = 0
 SelectedFrame = 0
 
@@ -136,6 +136,13 @@ function Main(team)
 		end
 	end
 	---------------------------------------------------------------------------------------------------------
+	--Getting the selected device and sending the nodes to be stored across all clients
+	hDevice = GetLocalSelectedDeviceId()--GetDeviceIdAtPosition(ProcessedMousePos())
+	if (hDevice ~= -1 or SelectedFrame + 15 < Frame) then
+		SendScriptEvent("AddPlayerNodeAToTable", tostring(GetDevicePlatformA(hDevice)) .. "," .. tostring(GetDevicePlatformB(hDevice)) .. "," .. tostring(GetLocalTeamId()), "", true)
+		SelectedFrame = Frame
+	end
+	
 	local deviceCount = GetDeviceCountSide(team)
 	local controllerArray = {}
 	for i=0,deviceCount - 1 do
@@ -169,12 +176,6 @@ end
 
 ---------------------------------------------------------------------------------------------------------
 function FindAndDealWithConnectedChambers(StructureID, DesiredHeight, team)
-	--Log("Sent Team " .. tostring(GetLocalTeamId()))
-	hDevice = GetLocalSelectedDeviceId()--GetDeviceIdAtPosition(ProcessedMousePos())
-	if (hDevice ~= -1 or SelectedFrame + 15 < Frame) then
-		SendScriptEvent("AddPlayerNodeAToTable", tostring(GetDevicePlatformA(hDevice)) .. "," .. tostring(GetDevicePlatformB(hDevice)) .. "," .. tostring(GetLocalTeamId()), "", true)
-		SelectedFrame = Frame
-	end
 	
 	if (data.NodeA[GetLocalTeamId()] == nil) then
 		data.NodeA[GetLocalTeamId()] = -1 --no node selected
@@ -184,19 +185,19 @@ function FindAndDealWithConnectedChambers(StructureID, DesiredHeight, team)
 	end
 	
 	local deviceCount = GetDeviceCount(team)
-	for i=0,deviceCount - 1 do
+	for i=0,deviceCount - 1 do --go through all devices on a team and make checks
 		local deviceID = GetDeviceId(team, i)
 		local NewStructureID = NodeStructureId(GetDevicePlatformA(deviceID))
 		if (StructureID == NewStructureID) then
 			local DeviceSavename = GetDeviceType(deviceID)
-			if (StartsWith(DeviceSavename, "dynamicbarrel")) then --and GetDeviceTeamIdActual(deviceID) == GetLocalTeamId()
+			if (StartsWith(DeviceSavename, "dynamicbarrel")) then --checking if it the device is a dynamic barrel
 				devTeamID = GetDeviceTeamIdActual(deviceID)
 				nA = data.NodeA[devTeamID]
 				nB = data.NodeB[devTeamID]
 				idChecker = GetDeviceIdOnPlatform(nA, nB)
-				if not (deviceID == idChecker) then
-					--SendScriptEvent("barrelMovement",tostring(deviceID)..","..tostring(DesiredHeight), "", true)
-					barrelMovement(deviceID,DesiredHeight)
+				--nodes stored on table have been retrieved and are used to get the deviceID of the relevant selected device
+				if not (deviceID == idChecker) then --check if the deviceIDs are the same
+					barrelMovement(deviceID,DesiredHeight) --execute barrelMovement script to change its weight
 				end
 			end
 		end
