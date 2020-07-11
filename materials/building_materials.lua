@@ -1,8 +1,9 @@
 for key,value in ipairs(Materials)
 do
-	value.AngleStressPrimaryThreshold = 100
-	value.MaxCompression = value.MaxCompression / 2
-	value.MaxExpansion = value.MaxExpansion * 2
+	value.AngleStressPrimaryThreshold = 25
+	local extraStrength = 1.05
+	value.MaxCompression = value.MaxCompression
+	value.MaxExpansion = value.MaxExpansion * extraStrength
 end
 
 -- Increase the drag of bracing and armour to make flown forts a bit more stable
